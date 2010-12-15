@@ -13,7 +13,7 @@ public class CelticNode extends JComponent {
     
     private boolean[] border;
 
-    public CelticNode (int direction, Line line) {
+    public CelticNode (int direction, final Line line) {
         this.direction = direction;
         this.line = line;
         
@@ -27,6 +27,7 @@ public class CelticNode extends JComponent {
             throw new IndexOutOfBoundsException(side + " out of range 0-3");
         }
         border[side] = on;
+        repaint();
     }
 
     public boolean getBorder(int side) {
@@ -34,6 +35,20 @@ public class CelticNode extends JComponent {
             throw new IndexOutOfBoundsException(side + " out of range 0-3");
         }
         return border[side];
+    }
+
+    public boolean toggleBorder(int side) {
+        boolean b = getBorder(side);
+        setBorder(side, !b);
+        return !b;
+    }
+
+    public final Line getLine () {
+        return line;
+    }
+    public void setLine(final Line line) {
+        this.line = line;
+        repaint();
     }
 
     public void paintComponent(Graphics g) {
