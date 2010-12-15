@@ -9,10 +9,14 @@ public class CelticNode extends JComponent {
     public static final int NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3;
     
     private int direction;
+    private Line line;
+    
     private boolean[] border;
 
-    public CelticNode (int direction) {
+    public CelticNode (int direction, Line line) {
         this.direction = direction;
+        this.line = line;
+        
         border = new boolean[4];
         for (int i = 0; i < 4; i++)
             border[i] = false;
@@ -33,82 +37,95 @@ public class CelticNode extends JComponent {
     }
 
     public void paintComponent(Graphics g) {
-       
+        double[][] p = getPoints();
+
+        if (p == null)
+            return;
+        
+        int[][] points = new int[3][2];
+        for (int i = 0; i < 3; i++) {
+            points[i][0] = (int)(getWidth() * p[i][0]);
+            points[i][1] = (int)(getHeight() * p[i][1]);
+        }
+        
+        line.drawLine(g, points[0], points[1], points[2]);
+    }
+
+    private double[][] getPoints() {
+        double[][] p = new double[3][2];
+        
         if (direction == NORTHWEST_SOUTHEAST) {
             if ((border[NORTH] && border[WEST]) ||
                 border[SOUTH] && border[EAST]) {
                 // Can't draw the line if one of the points has a dead end
-                return;
-            } else if (border[NORTH] && border[EAST]) {
-                // arc from west to south
-                g.drawArc(0 -(int)(getWidth() * .5), (int)(getHeight() * .5),
-                          getWidth(), getHeight(),
-                          0, 90);
-            } else if (border[SOUTH] && border[WEST]) {
-                // arc from east to north
-                g.drawArc((int)(getWidth() * .5),
-                          0 - (int)(getHeight() * .5),
-                          getWidth(), getHeight(),
-                          180, 360);
-            } else if(border[NORTH] && border[SOUTH]) {
-                // line from east to west
-                int y = (int)(getHeight() * .5);
-                g.drawLine(0, y, getWidth(), y);
-            } else if(border[EAST] && border[WEST]) {
-                // line from north to south
-                int x = (int)(getWidth() * .5);
-                g.drawLine(x, 0, x, getHeight());
-            } else if (border[NORTH]) {
-                // arc from west to southeast
-                g.drawArc(0 - (int)(getWidth() * 1.5), (int)(getHeight() * .5),
-                          (int)(getWidth() * 2.5), getHeight() * 2,
-                          0, 360);
-            } else if (border[EAST]) {
-                // arc from northwest to south
-                g.drawArc(0, getHeight(),
-                          (int)(getWidth() * .5), getHeight(),
-                          0, 90);
-            } else if (border[SOUTH]) {
-                // arc from northwest to east
-                g.drawArc(0, 0,
-                          getWidth(), (int)(getHeight() * .5),
-                          180, -90);
+                return null;
+            }
+            if (border[NORTH]) {
+                // p 0 moves west
+                p[0][0] = 0;
+                p[0][1] = .5;
             } else if (border[WEST]) {
-                // arc from north to southeast
-                g.drawArc(getWidth(), 0,
-                          (int)(getWidth() * .5), getHeight(),
-                          270, -90);
+                // p 0 moves north
+                p[0][0] = .5;
+                p[0][1] = 0;
             } else {
-                // line from northwest to southeast
-                g.drawLine(0, 0, getWidth(), getHeight());
+                // p 0 is northwest
+                p[0][0] = 0;
+                p[0][1] = 0;
+            }
+            
+            if(border[SOUTH]) {
+                // p 2 moves east
+                p[2][0] = 1;
+                p[2][1] = .5;
+            } else if(border[EAST]) {
+                // p 2 moves south
+                p[2][0] = .5;
+                p[2][1] = 1;
+            } else {
+                // p 2 is southeast
+                p[2][0] = 1;
+                p[2][1] = 1;
             }
             
         } else if (direction == SOUTHWEST_NORTHEAST) {
-            // Can't draw the line if one of the points has a dead end
             if ((border[SOUTH] && border[WEST]) ||
                 border[NORTH] && border[EAST]) {
-                return;
-            } else if (border[SOUTH] && border[EAST]) {
-                // arc from west to north
-                g.drawArc(0 - (int)(getWidth() * .5), 0 - (int)(getHeight() * .5),
-                          getWidth(), getHeight(),
-                          270, 90);
-            } else if (border[NORTH] && border[WEST]) {
-                // arc from east to south
-                g.drawArc((int)(getWidth() * .5),
-                          (int)(getHeight() * .5),
-                          getWidth(), getHeight(),
-                          90, 90);
+                // Can't draw the line if one of the points has a dead end
+                return null;
+            }
+
+            if (border[SOUTH]) {
+                // p 0 moves west
+                p[0][0] = 0;
+                p[0][1] = .5;
+            } else if (border[WEST]) {
+                // p 0 moves south
+                p[0][0] = .5;
+                p[0][1] = 1;
             } else {
-                int[] p1 = new int[2], p2 = new int[2];
-                p1[0] = (border[WEST] ? (int)(getWidth() * .5) : 0);
-                p1[1] = (border[SOUTH] ? (int)(getHeight() * .5) : getHeight());
-                p2[0] = (border[EAST] ? (int)(getWidth() * .5) : getWidth());
-                p2[1] = (border[NORTH] ? (int)(getHeight() * .5) : 0);
-                g.drawLine(p1[0], p1[1], p2[0], p2[1]);
+                // p 0 is southwest
+                p[0][0] = 0;
+                p[0][1] = 1;
+            }
+
+            if (border[NORTH]) {
+                // p 2 moves east
+                p[2][0] = 1;
+                p[2][1] = .5;
+            } else if (border[EAST]) {
+                // p 2 moves north
+                p[2][0] = .5;
+                p[2][1] = 0;
+            } else {
+                // p 2 is northeast
+                p[2][0] = 1;
+                p[2][1] = 0;
             }
         }
+        p[1][0] = .5;
+        p[1][1] = .5;
+        return p;
     }
-
     
 }

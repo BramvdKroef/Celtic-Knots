@@ -11,6 +11,8 @@ public class CelticKnot extends JPanel {
         setPreferredSize(new Dimension(horizontalNodes * 40,
                                        verticalNodes * 40));
 
+        Line l = new BezierCurve();
+        
         boolean even_v = false;
         for (int y = 0; y < verticalNodes; y++) {
             boolean even_h = even_v;
@@ -19,7 +21,7 @@ public class CelticKnot extends JPanel {
                 
                 int direction = even_h ? CelticNode.NORTHWEST_SOUTHEAST
                     : CelticNode.SOUTHWEST_NORTHEAST;
-                CelticNode node = new CelticNode(direction);
+                CelticNode node = new CelticNode(direction, l);
                 add(node);
                 if (y == 0) {
                     node.setBorder(CelticNode.NORTH, true);
