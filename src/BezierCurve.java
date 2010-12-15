@@ -10,11 +10,18 @@ public class BezierCurve implements Line {
     }
 
     public void drawLine(Graphics g, int[] p1, int[] p2, int[] p3) {
-        int points = 100;
+        // The number of points is the horizontal distance between p1 and p3.
+        // 1 point for each pixel between p1 and p3
+        int points = p3[0] - p1[0];
+        
         int[] bx = new int[points + 1], by = new int[points + 1];
+        double interval = 1 / (double)points;
 
+        // for each t in range 0...1 
         double t = 0;
         for (int i = 0; i <= points; i++) {
+
+            // Copied from wikipedia
             bx[i] = (int) 
                 (Math.pow(1 - t, 2) * p1[X] +
                  2 * (1 - t) * t * p2[X] +
@@ -23,7 +30,7 @@ public class BezierCurve implements Line {
                 (Math.pow(1 - t, 2) * p1[Y] +
                  2 * (1 - t) * t * p2[Y] +
                  Math.pow(t, 2) * p3[Y]);
-            t += .01;
+            t += interval;
         }
 
         g.drawPolyline(bx, by, points + 1);
