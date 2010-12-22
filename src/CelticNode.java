@@ -13,7 +13,7 @@ public class CelticNode extends JComponent {
     
     private boolean[] border;
 
-    public CelticNode (int direction, final Line line) {
+    public CelticNode (final int direction, final Line line) {
         this.direction = direction;
         this.line = line;
         
@@ -22,22 +22,22 @@ public class CelticNode extends JComponent {
             border[i] = false;
     }
 
-    public void setBorder(int side, boolean on) {
-        if (side < 0 || side > 3) {
+    public void setBorder(final int side, boolean on) {
+        if (side < 0 || side > 3) 
             throw new IndexOutOfBoundsException(side + " out of range 0-3");
-        }
+        
         border[side] = on;
         repaint();
     }
 
-    public boolean getBorder(int side) {
-        if (side < 0 || side > 3) {
+    public boolean getBorder(final int side) {
+        if (side < 0 || side > 3) 
             throw new IndexOutOfBoundsException(side + " out of range 0-3");
-        }
+        
         return border[side];
     }
 
-    public boolean toggleBorder(int side) {
+    public boolean toggleBorder(final int side) {
         boolean b = getBorder(side);
         setBorder(side, !b);
         return !b;
@@ -75,33 +75,13 @@ public class CelticNode extends JComponent {
                 // Can't draw the line if one of the points has a dead end
                 return null;
             }
-            if (border[NORTH]) {
-                // p 0 moves west
-                p[0][0] = 0;
-                p[0][1] = .5;
-            } else if (border[WEST]) {
-                // p 0 moves north
-                p[0][0] = .5;
-                p[0][1] = 0;
-            } else {
-                // p 0 is northwest
-                p[0][0] = 0;
-                p[0][1] = 0;
-            }
             
-            if(border[SOUTH]) {
-                // p 2 moves east
-                p[2][0] = 1;
-                p[2][1] = .5;
-            } else if(border[EAST]) {
-                // p 2 moves south
-                p[2][0] = .5;
-                p[2][1] = 1;
-            } else {
-                // p 2 is southeast
-                p[2][0] = 1;
-                p[2][1] = 1;
-            }
+            // line is {0,0} -> {1, 1}. Adjust if there are borders.
+            p[0][0] = (border[WEST] ? .5 : 0);
+            p[0][1] = (border[NORTH] ? .5 : 0);
+
+            p[2][0] = (border[EAST] ? .5 : 1);
+            p[2][1] = (border[SOUTH] ? .5 : 1);
             
         } else if (direction == SOUTHWEST_NORTHEAST) {
             if ((border[SOUTH] && border[WEST]) ||
@@ -110,33 +90,12 @@ public class CelticNode extends JComponent {
                 return null;
             }
 
-            if (border[SOUTH]) {
-                // p 0 moves west
-                p[0][0] = 0;
-                p[0][1] = .5;
-            } else if (border[WEST]) {
-                // p 0 moves south
-                p[0][0] = .5;
-                p[0][1] = 1;
-            } else {
-                // p 0 is southwest
-                p[0][0] = 0;
-                p[0][1] = 1;
-            }
+            // line is {0,1} -> {1, 0}. Adjust if there are borders.
+            p[0][0] = (border[WEST] ? .5 : 0);
+            p[0][1] = (border[SOUTH] ? .5 : 1);
 
-            if (border[NORTH]) {
-                // p 2 moves east
-                p[2][0] = 1;
-                p[2][1] = .5;
-            } else if (border[EAST]) {
-                // p 2 moves north
-                p[2][0] = .5;
-                p[2][1] = 0;
-            } else {
-                // p 2 is northeast
-                p[2][0] = 1;
-                p[2][1] = 0;
-            }
+            p[2][0] = (border[EAST] ? .5 : 1);
+            p[2][1] = (border[NORTH] ? .5 : 0);
         }
         p[1][0] = .5;
         p[1][1] = .5;
