@@ -4,6 +4,11 @@ import java.awt.Color;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 
+/**
+ * The Grid produces an overlay for the CelticKnot that allows users to add
+ * lines to the grid with the mouse. New lines block the lines of the knot and
+ * forces them to take an alternate path.
+ */
 public class Grid implements MouseListener {
     private CelticKnot knot;
     private int[] selected = null;
@@ -39,7 +44,12 @@ public class Grid implements MouseListener {
         }
     }
 
-    public void mouseClicked(MouseEvent e) {
+    /**
+     * Maps the current mouse position to the closest dot and selects that
+     * dot. If an adjecent dot is selected at the time a line is added to the
+     * grid -- or removed if there already was one -- between the two dots.
+     */
+    public void mousePressed(MouseEvent e) {
         int columns = knot.getColumns() / 2;
         int rows = knot.getRows() / 2;
         
@@ -61,6 +71,7 @@ public class Grid implements MouseListener {
             // if new selection is adjacent to the last
             if (Math.abs(selected[0] - newselection[0]) +
                 Math.abs(selected[1] - newselection[1]) == 1) {
+                // toggle the borders between the two dots.
                 toggleBorders(selected, newselection);
             }
         }
@@ -71,7 +82,22 @@ public class Grid implements MouseListener {
                      12, 12);
     }
 
+    /**
+     * Toggles the borders on the CelticNodes that are on the line between p1
+     * and p2.
+     *
+     * The line between p1 and p2 should be either horizontal or vertical and
+     * have a length of 1 grid row or column.
+     *
+     * @param p1  An array of two integers giving the x and y location of
+     *            point 1.
+     * @param p2  An array of two integers giving the x and y location of
+     *            point 2.
+     */
     private void toggleBorders (int[] p1, int[] p2) {
+        assert (p1[0] == p2[0] && Math.abs(p1[1] - p2[1]) == 1) ||
+            (p1[1] == p2[1] && Math.abs(p1[0] - p2[0]) == 1);
+            
         if (p1[0] == p2[0]) {
             int x = p1[0] * 2;
             int y = Math.min(p1[1], p2[1]) * 2;
@@ -101,13 +127,13 @@ public class Grid implements MouseListener {
             }
         }
     }
-    
-    public void	mouseEntered(MouseEvent e) {
+
+    public void mouseClicked(MouseEvent e) {
     }
-    public void	mouseExited(MouseEvent e) {
+    public void mouseEntered(MouseEvent e) {
     }
-    public void	mousePressed(MouseEvent e) {
+    public void mouseExited(MouseEvent e) {
     }
-    public void	mouseReleased(MouseEvent e) {
+    public void mouseReleased(MouseEvent e) {
     }
 }
