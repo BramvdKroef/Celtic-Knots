@@ -12,7 +12,10 @@ import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-
+/**
+ * Creates a frame to display a celtic knot in and adds a few controls to change
+ * the line style, the foreground and background colors and to toggle the grid.
+ */
 public class KnotBoard extends JPanel implements ActionListener {
     private CelticKnot knot;
     private JComboBox line;
@@ -21,7 +24,20 @@ public class KnotBoard extends JPanel implements ActionListener {
     
     public static void main(String[] args) {
         JFrame frame = new JFrame();
-        frame.add(new KnotBoard());
+        int x = 5, y = 5;
+
+        if (args.length == 2) {
+            try {
+                x = Integer.parseInt(args[0]);
+                y = Integer.parseInt(args[1]);
+            } catch (NumberFormatException e) {
+                System.err.println("Error: Two arguments were given but they " +
+                                   "could not be parsed as integers.");
+                return;
+            }
+        }
+        
+        frame.add(new KnotBoard(x, y));
 
         frame.setPreferredSize(new Dimension(500,500));
         frame.pack();
@@ -29,9 +45,9 @@ public class KnotBoard extends JPanel implements ActionListener {
         frame.setVisible(true);
     }
 
-    public KnotBoard () {
+    public KnotBoard (int horizontalNodes, int verticalNodes) {
         super(new BorderLayout());
-        knot = new CelticKnot(10,10);
+        knot = new CelticKnot(horizontalNodes, verticalNodes);
         JPanel controls = new JPanel();
         
         line = new JComboBox();
