@@ -1,0 +1,18 @@
+
+
+* Requirements
+- Java
+- Apache Ant
+
+* Build
+
+In the base directory (where build.xml) is run 'ant build' to build
+the project or 'ant dist' to create a .jar file in the dist directory. 
+
+* Usage
+
+Run 'java dist/dist-{timestamp}.jar'. Two optional arguments change
+the size of the knot. The default is 5. To double the size, for
+example, use: 'java dist/dist-{timestamp}.jar 10 10'.
+
+
