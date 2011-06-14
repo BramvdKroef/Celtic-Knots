@@ -33,7 +33,7 @@
 
       <manifest>
         <attribute name="Built-By" value="${user.name}" />
-        <attribute name="Main-Class" value="KnotBoard" />
+        <attribute name="Main-Class" value="${classname}" />
         <section name="common">
           <attribute name="Specification-Title" value="${component.name}" />
           <attribute name="Specification-Version" value="${component.version}" />
