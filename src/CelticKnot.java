@@ -15,6 +15,7 @@ import java.awt.Graphics;
 public class CelticKnot extends JComponent {
     private Line line = new BezierCurve();
     private Grid grid;
+    private boolean interlace = true;
 
     /**
      * Because GridLayout has no way to retrieve a component by giving the row
@@ -65,7 +66,7 @@ public class CelticKnot extends JComponent {
                 
                 int direction = even_h ? CelticNode.NORTHWEST_SOUTHEAST
                     : CelticNode.SOUTHWEST_NORTHEAST;
-                CelticNode node = new CelticNode(direction, line);
+                CelticNode node = new CelticNode(direction, line, interlace);
                 nodes[x][y] = node;
                 add(node);
 
@@ -153,6 +154,20 @@ public class CelticKnot extends JComponent {
         }
         // repaint the whole image
         repaint();
+    }
+
+    public void setInterlace (boolean b) {
+        Component[] c = getComponents();
+        for (int i = 0; i < c.length; i++) {
+            if (c[i] instanceof CelticNode) {
+                ((CelticNode)c[i]).setInterlace(b);
+            }
+        }
+        // repaint the whole image
+        repaint();
+    }
+    public boolean isInterlaced() {
+        return interlace;
     }
 }
 

@@ -19,7 +19,7 @@ import java.awt.event.ActionEvent;
 public class KnotBoard extends JPanel implements ActionListener {
     private CelticKnot knot;
     private JComboBox line;
-    private JCheckBox showgrid;
+    private JCheckBox showgrid, interlace;
     private JButton fg, bg;
     
     public static void main(String[] args) {
@@ -58,6 +58,10 @@ public class KnotBoard extends JPanel implements ActionListener {
         controls.add(line);
         line.addActionListener(this);
         
+        interlace = new JCheckBox("Interlace", knot.isInterlaced());
+        controls.add(interlace);
+        interlace.addActionListener(this);
+
         showgrid = new JCheckBox("Show Grid", knot.isGridShown());
         controls.add(showgrid);
         showgrid.addActionListener(this);
@@ -83,6 +87,8 @@ public class KnotBoard extends JPanel implements ActionListener {
             }
         } else if (e.getSource() == showgrid) {
             knot.setShowGrid(showgrid.isSelected());
+        } else if (e.getSource() == interlace) {
+            knot.setInterlace(interlace.isSelected());
         } else if (e.getSource() == fg) {
             Color newColor =
                 JColorChooser.showDialog(this,

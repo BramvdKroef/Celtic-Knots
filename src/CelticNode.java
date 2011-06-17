@@ -10,12 +10,19 @@ public class CelticNode extends JComponent {
     
     private int direction;
     private Line line;
+    private boolean interlace = true;
     
     private boolean[] border;
 
     public CelticNode (final int direction, final Line line) {
+        this(direction, line, true);
+    }
+    
+    public CelticNode (final int direction, final Line line,
+                       final boolean interlace) {
         this.direction = direction;
         this.line = line;
+        this.interlace = interlace;
         
         border = new boolean[4];
         for (int i = 0; i < 4; i++)
@@ -51,6 +58,13 @@ public class CelticNode extends JComponent {
         repaint();
     }
 
+    public void setInterlace (boolean b) {
+        interlace = b;
+    }
+    public boolean isInterlaced() {
+        return interlace;
+    }
+
     public void paintComponent(Graphics g) {
         double[][] p = getPoints();
 
@@ -82,6 +96,18 @@ public class CelticNode extends JComponent {
 
             p[2][0] = (border[EAST] ? .5 : 1);
             p[2][1] = (border[SOUTH] ? .5 : 1);
+
+            if (interlace) {
+                if (!border[WEST] && !border[NORTH]) {
+                    p[0][0] = .05;
+                    p[0][1] = .05;
+                }
+
+                if (!border[EAST] && !border[SOUTH]) {
+                    p[2][0] = .95;
+                    p[2][1] = .95;
+                }
+            }
             
         } else if (direction == SOUTHWEST_NORTHEAST) {
             if ((border[SOUTH] && border[WEST]) ||
