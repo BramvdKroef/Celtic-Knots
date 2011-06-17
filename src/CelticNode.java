@@ -80,6 +80,30 @@ public class CelticNode extends JComponent {
         line.drawLine(g, points[0], points[1], points[2]);
     }
 
+    /**
+     * Locates the three points that the line for this node runs
+     * through.
+     *
+     * Point 2, the middle, is always the center. Point 1 and 3 depend
+     * on wether this.direction is NORTHWEST_SOUTHEAST (point 1 is
+     * northwest and point 3 southeast) or SOUTHWEST_NORTHEAST (point
+     * 1 is southwest and point 3 northeast).
+     *
+     * If the node has active borders (a boolean in this.border[] is
+     * set to true) the line is adjusted.
+     *
+     * For example if point 1 is northwest and the northern border is
+     * active then point 1 is changed to west, thus avoiding the
+     * border. Instead if the western border is active the point is
+     * changed to north.
+     *
+     * If interlacing is on the northeast -> southeast lines are
+     * shortened so they don't touch the other nodes.
+     *
+     * @return an array containing an array for each of the three
+     *   points. For each point an x and a y value are given. The
+     *   range for the values is 0-1.
+     */
     private double[][] getPoints() {
         double[][] p = new double[3][2];
         
