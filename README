@@ -15,4 +15,8 @@ Run 'java dist/dist-{timestamp}.jar'. Two optional arguments change
 the size of the knot. The default is 5. To double the size, for
 example, use: 'java dist/dist-{timestamp}.jar 10 10'.
 
+Click on a dot to highlight it. Then click on one under it, above it
+or next to it to break up the pattern. The buttons on the bottom will
+let you change line style, hide the grid and change the colors.
 
+Have fun.
